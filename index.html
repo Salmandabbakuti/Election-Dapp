@@ -30,10 +30,9 @@
             <form role="form">
               <div class="form-group" style="display:inline;">
                 <div class="input-group">
-                  <input class="form-control input-lg" name="candidateName">
-                  </input>
+                  <input id="write" placeholder="Write Something..." type="text" />
                   <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-lg">Add Candidate</button>
+                    <button id="btn" type="submit" class="btn btn-primary btn-lg">Add Candidate</button>
                   </span>
                 </div>
               </div>
@@ -55,65 +54,63 @@
 	    else {
         web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
       }
-
       // Set Account
       web3.eth.defaultAccount = web3.eth.accounts[0];
-
       // Set Contract Abi
       var contractAbi = [
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "setCandidate",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "candidateName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	}
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "setCandidate",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "candidateName",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]; // Add Your Contract ABI here!!!
-
       // Set Contract Address
-      var contractAddress = '0x87df54ad068e43d69169365c8357e3d037e7f397'; // Add Your Contract address here!!!
-
+      var contractAddress = '0xe6816173b6c6cefac1e8cfac590304a6b893ddce'; // Add Your Contract address here!!!
       // Set the Contract
       var contract = web3.eth.contract(contractAbi).at(contractAddress);
-
       // Display Candidate Name
       contract.candidateName(function(err, candidateName) {
         $('#candidateName').html(candidateName);
       });
-
       // Change the Candidate Name
-      $('form').on('submit', function(event) {
-        event.preventDefault();
-        contract.setCandidate($('input').val());
+     $("#btn").click(function(){
+      contract.setCandidate.sendTransaction(document.getElementById("write").value, { from: web3.eth.accounts[0], gas: 4000000 }, function (error, result) {
+            if (!error) {
+                console.log(result);
+            } else {
+                console.log(error);
+            }
       })
-
+    });
     </script>
   </body>
 </html>
